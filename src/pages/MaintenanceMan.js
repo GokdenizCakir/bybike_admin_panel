@@ -107,7 +107,7 @@ const MaintenanceMan = () => {
   };
 
   const bikeIcon = new L.Icon({
-    iconUrl: require('./../assets/bike.png'),
+    iconUrl: require('./../assets/bikeBlue.png'),
     iconSize: [36, 36],
   });
 
@@ -215,7 +215,7 @@ const MaintenanceMan = () => {
             touchZoom={true}
           >
             <TileLayer
-              url='http://mts1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'
+              url='http://mts1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}'
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               // attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
             />
@@ -241,7 +241,7 @@ const MaintenanceMan = () => {
         <div className='relative h-0'>
           <div
             ref={parentBikesRef}
-            className='absolute flex items-center overflow-x-scroll overflow-y-visible pl-4 gap-4 z-30 h-60 w-[100%] -top-60'
+            className='absolute flex items-end overflow-x-scroll overflow-y-visible pl-4 gap-4 z-30 h-56 w-[100%] -top-60'
           >
             {renderedBikes.map((bike, index) => (
               <div
@@ -257,9 +257,9 @@ const MaintenanceMan = () => {
                 id={bike.id}
                 className={`${
                   selectedBike === bike.id
-                    ? 'bg-[#8ae2df] border-[#8ae2df] h-60'
-                    : 'border-gray-300'
-                } min-w-80 h-40 p-2 bg-white border-2 cursor-pointer rounded-2xl shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)]`}
+                    ? 'bg-[#8ae2df] border-[#8ae2c8] h-52'
+                    : 'border-gray-300 bg-white'
+                } min-w-80 h-40 p-2 transition-all duration-300 border-2 cursor-pointer rounded-2xl shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)]`}
               >
                 {bike.id} akdhbfakehfaıylefhjnalıeyfhanelıfhaeılufhlae
               </div>
