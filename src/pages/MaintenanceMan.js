@@ -166,11 +166,11 @@ const MaintenanceMan = () => {
   };
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(success, error);
+    navigator.geolocation.watchPosition(success, error);
   }, []);
 
   setInterval(() => {
-    navigator.geolocation.getCurrentPosition(success, error);
+    navigator.geolocation.watchPosition(success, error);
   }, 30 * 1000);
 
   return (
@@ -341,7 +341,7 @@ const MaintenanceMan = () => {
         </div>
       </div>
 
-      <div className='lg:w-[24rem] w-full h-[100rem] lg:h-screen z-30 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)]'>
+      <div className='lg:w-[24rem] w-full h-[100rem] lg:h-screen z-30 shadow-[0_40px_10px_0px_rgba(0,0,0,0.5)]'>
         hello
       </div>
     </div>
