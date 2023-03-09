@@ -169,9 +169,9 @@ const MaintenanceMan = () => {
     navigator.geolocation.watchPosition(success, error);
   }, []);
 
-  setInterval(() => {
-    navigator.geolocation.watchPosition(success, error);
-  }, 30 * 1000);
+  // setInterval(() => {
+  //   navigator.geolocation.watchPosition(success, error);
+  // }, 30 * 1000);
 
   return (
     <div className='flex flex-col lg:flex-row lg:h-screen'>
