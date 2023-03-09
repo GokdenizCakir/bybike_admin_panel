@@ -7,6 +7,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import target from './../assets/target.svg';
 import bikeLogo from './../assets/bikeWhite.svg';
+import blackBikeLogo from './../assets/bikeBlack.svg';
+import redirect from './../assets/redirect.svg';
 import { useRecoilState } from 'recoil';
 
 const MaintenanceMan = () => {
@@ -19,39 +21,44 @@ const MaintenanceMan = () => {
 
   const bikes = [
     {
-      id: '0',
+      id: '3256246465',
       latitude: 41.088686794249774,
       longitude: 28.979958520573042,
       charge: 20,
       faultCode: 23442,
+      userId: null,
     },
     {
-      id: '1',
+      id: '425747454',
       latitude: 41.09040376781982,
       longitude: 28.979976653784878,
       charge: 46,
       faultCode: null,
+      userId: '2723482734760',
     },
     {
-      id: '2',
+      id: '193808707',
       latitude: 41.09079424550636,
       longitude: 28.982201439619224,
       charge: 74,
       faultCode: 34252,
+      userId: null,
     },
     {
-      id: '3',
+      id: '346467758',
       latitude: 41.08534361207642,
       longitude: 28.978598650157554,
       charge: 24,
       faultCode: null,
+      userId: '2376429743628',
     },
     {
-      id: '4',
+      id: '24635757',
       latitude: 41.097024855859296,
       longitude: 28.981529761373974,
       charge: 100,
       faultCode: null,
+      userId: null,
     },
   ];
 
@@ -76,7 +83,7 @@ const MaintenanceMan = () => {
       if (child.id === id) {
         child.scrollIntoView({
           behavior: 'smooth',
-          block: 'center',
+          block: 'end',
           inline: 'center',
         });
       }
@@ -119,25 +126,25 @@ const MaintenanceMan = () => {
   const selectedDefectiveBikeIcon = new L.divIcon({
     className: 'flex justify-center items-center',
     iconSize: [36, 36],
-    html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border-2 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#ff5353]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+    html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#ff5353]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
   });
 
   const defectiveBikeIcon = new L.divIcon({
     className: 'flex justify-center items-center',
     iconSize: [36, 36],
-    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border-2 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#ff5353]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#ff5353]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
   });
 
   const selectedBikeIcon = new L.divIcon({
     className: 'flex justify-center items-center',
     iconSize: [36, 36],
-    html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border-2 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#8ae2c8]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+    html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#8ae2c8]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
   });
 
   const bikeIcon = new L.divIcon({
     className: 'flex justify-center items-center',
     iconSize: [36, 36],
-    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border-2 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#8ae2c8]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#8ae2c8]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
   });
 
   const markerIcon = new L.Icon({
@@ -169,7 +176,7 @@ const MaintenanceMan = () => {
   return (
     <div className='flex flex-col lg:flex-row lg:h-screen'>
       <div className='w-full overflow-hidden'>
-        <div className='relative flex items-center bg-[#6040d4] h-20 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] md:h-0'>
+        <div className='relative flex items-center bg-[#876ce9] h-20 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] md:h-0'>
           <div className='flex m-4 md:m-8 md:relative items-center ml-auto space-x-1 sm:space-x-6'>
             <img
               className='inline-block h-10 p-2 cursor-pointer accent-white'
@@ -225,7 +232,7 @@ const MaintenanceMan = () => {
           </div>
           <div
             ref={centerRef}
-            className='absolute shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] right-2 -bottom-16 flex justify-center items-center bg-white w-14 h-14 rounded-[50%] border-2 border-gray-600 cursor-pointer z-40'
+            className='absolute shadow-[0_0_20px_0px_rgba(0,0,0,0.5)] right-2 -bottom-16 flex justify-center items-center bg-white w-14 h-14 rounded-[50%] border-2 border-gray-600 cursor-pointer z-40'
           >
             <img className='w-10' src={target} alt='center' />
           </div>
@@ -236,7 +243,7 @@ const MaintenanceMan = () => {
             whenReady={() => {
               setCoordsFetched(true);
             }}
-            className='w-full z-30 h-[60vh] lg:h-screen'
+            className='w-full z-30 h-[66vh] lg:h-screen'
             center={center}
             zoomControl={true}
             zoomAnimation={true}
@@ -279,34 +286,55 @@ const MaintenanceMan = () => {
         <div className='relative h-0'>
           <div
             ref={parentBikesRef}
-            className='absolute flex items-end overflow-x-scroll overflow-y-visible pl-4 gap-4 z-30 h-56 w-[100%] -top-60'
+            className='absolute flex items-end overflow-x-scroll overflow-visible px-4 gap-4 z-30 h-[15rem] pb-3 w-[100%] -top-[15rem]'
           >
             {renderedBikes.map((bike, index) => (
               <div
                 onClick={(e) => {
-                  setSelectedBike(e.target.id);
+                  setSelectedBike(bike.id);
                   e.target.scrollIntoView({
                     behavior: 'smooth',
-                    block: 'center',
+                    block: 'end',
                     inline: 'center',
                   });
                 }}
                 key={index}
                 id={bike.id}
                 className={`${
-                  bike.faultCode
-                    ? selectedBike === bike.id
-                      ? 'bg-[#ff5353] border-[##ff5353] h-52'
-                      : 'border-gray-300 cursor-pointer bg-white'
-                    : selectedBike === bike.id
-                    ? 'bg-[#bdf1e2] border-[#bdf1e2] h-52'
-                    : 'border-gray-300 cursor-pointer bg-white'
-                } h-40 p-2 transition-all bg-[${bikeLogo}] duration-300 border-2 rounded-2xl shadow-[0_5px_10px_0px_rgba(0,0,0,0.12)]`}
+                  selectedBike === bike.id
+                    ? 'border-[#49e8bb] border-4 h-52'
+                    : 'border-gray-300 cursor-pointer'
+                } h-40 p-2 transition-all bg-white bg-[${bikeLogo}] flex-col flex justify-between duration-300 rounded-2xl shadow-[0_0_20px_0px_rgba(0,0,0,0.5)]`}
               >
-                <div className='flex w-80 px-2 items-center pointer-events-none justify-between'>
-                  <img className='w-10' src={bikeLogo} alt='bike' />
-                  {bike.id}
+                <div className='flex w-64 sm:w-80 px-1 sm:px-2 items-center pointer-events-none justify-between'>
+                  <div className='flex items-center gap-1'>
+                    <img className='w-10' src={blackBikeLogo} alt='bike' />
+                    {bike.charge}%
+                  </div>
+                  <h2>Bike ID: {bike.id}</h2>
                 </div>
+                {bike.faultCode ? (
+                  <div className='flex justify-center'>
+                    <h2 className='text-red-600 pointer-events-none'>
+                      Fault Code: {bike.faultCode}
+                    </h2>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+                {bike.userId ? (
+                  <div className='flex text-sm sm:text-base justify-center gap-2 items-center'>
+                    <h2>Current User:</h2>
+                    <div>{bike.userId}</div>
+                    <img
+                      className='w-8 cursor-pointer p-1'
+                      src={redirect}
+                      alt='redirect'
+                    />
+                  </div>
+                ) : (
+                  <div className='h-5'></div>
+                )}
               </div>
             ))}
           </div>
