@@ -8,7 +8,7 @@ export const employeeData = [
     title: 'CEO Co-Founder',
     status: 'FREE',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#472135',
@@ -19,7 +19,7 @@ export const employeeData = [
     title: 'Frontend Developer',
     status: 'ON FIELD',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#545435',
@@ -30,7 +30,7 @@ export const employeeData = [
     title: 'CEO Co-Founder',
     status: 'FREE',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#472135',
@@ -41,7 +41,7 @@ export const employeeData = [
     title: 'Frontend Developer',
     status: 'ON FIELD',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#545435',
@@ -52,7 +52,7 @@ export const employeeData = [
     title: 'CEO Co-Founder',
     status: 'FREE',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#472135',
@@ -63,7 +63,7 @@ export const employeeData = [
     title: 'Frontend Developer',
     status: 'ON FIELD',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#545435',
@@ -74,7 +74,7 @@ export const employeeData = [
     title: 'CEO Co-Founder',
     status: 'FREE',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#472135',
@@ -85,7 +85,7 @@ export const employeeData = [
     title: 'Frontend Developer',
     status: 'ON FIELD',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#545435',
@@ -96,7 +96,7 @@ export const employeeData = [
     title: 'CEO Co-Founder',
     status: 'FREE',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
+    phoneNumber: '+90 505 017 0482',
   },
   {
     userID: '#472135',
@@ -107,24 +107,105 @@ export const employeeData = [
     title: 'Frontend Developer',
     status: 'ON FIELD',
     dateOfEmployement: '23/04/18',
-    phoneNumber: '+90 505 017 0482'
-  }
+    phoneNumber: '+90 505 017 0482',
+  },
 ];
 
 export const invoiceData = [
   {
     id: '#MS-415646',
     date: '11 March 2023',
-    amount: '180TL'
+    amount: '180TL',
   },
   {
     id: '#MS-412342',
     date: '07 March 2023',
-    amount: '220TL'
+    amount: '220TL',
   },
   {
     id: '#MS-025646',
     date: '02 March 2023',
-    amount: '120TL'
-  }
-]
+    amount: '120TL',
+  },
+];
+
+export const bikes = [
+  {
+    id: '3256246465',
+    latitude: 41.088686794249774,
+    longitude: 28.979958520573042,
+    charge: 20,
+    faultCode: 23442,
+    userId: null,
+  },
+  {
+    id: '193808707',
+    latitude: 41.09079424550636,
+    longitude: 28.982201439619224,
+    charge: 74,
+    faultCode: 34252,
+    userId: null,
+  },
+  {
+    id: '346467758',
+    latitude: 41.08534361207642,
+    longitude: 28.978598650157554,
+    charge: 24,
+    faultCode: null,
+    userId: '2376429743628',
+  },
+  {
+    id: '24635757',
+    latitude: 41.097024855859296,
+    longitude: 28.981529761373974,
+    charge: 100,
+    faultCode: null,
+    userId: null,
+  },
+];
+
+export const docks = [
+  {
+    name: 'DOCK1',
+    id: 1,
+    latitude: 41.0907338983762,
+    longitude: 28.971089994531972,
+    bikes: [
+      {
+        id: '234834726',
+        charge: 66,
+      },
+      {
+        id: '245992487',
+        charge: 90,
+      },
+      {
+        id: '027823564',
+        charge: 12,
+      },
+    ],
+  },
+  {
+    name: 'DOCK2',
+    id: 2,
+    latitude: 41.08522945144615,
+    longitude: 28.961324125720086,
+    bikes: [
+      {
+        id: '23524357',
+        charge: 2,
+      },
+      {
+        id: '135264374',
+        charge: 45,
+      },
+    ],
+  },
+  {
+    name: 'DOCK3',
+    id: 3,
+    latitude: 41.09063683589029, 
+    longitude: 29.00601287031649,
+    bikes: [],
+  },
+];

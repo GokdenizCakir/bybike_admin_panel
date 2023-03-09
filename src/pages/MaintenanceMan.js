@@ -9,6 +9,9 @@ import target from './../assets/target.svg';
 import bikeLogo from './../assets/bikeWhite.svg';
 import blackBikeLogo from './../assets/bikeBlack.svg';
 import redirect from './../assets/redirect.svg';
+import charge from './../assets/charge.svg';
+import downArrow from './../assets/downArrow.svg';
+import { bikes, docks } from '../utils/dummyData';
 import { useRecoilState } from 'recoil';
 
 const MaintenanceMan = () => {
@@ -18,49 +21,6 @@ const MaintenanceMan = () => {
   const [selectedBike, setSelectedBike] = useState('6');
   const centerRef = useRef();
   const parentBikesRef = useRef();
-
-  const bikes = [
-    {
-      id: '3256246465',
-      latitude: 41.088686794249774,
-      longitude: 28.979958520573042,
-      charge: 20,
-      faultCode: 23442,
-      userId: null,
-    },
-    {
-      id: '425747454',
-      latitude: 41.09040376781982,
-      longitude: 28.979976653784878,
-      charge: 46,
-      faultCode: null,
-      userId: '2723482734760',
-    },
-    {
-      id: '193808707',
-      latitude: 41.09079424550636,
-      longitude: 28.982201439619224,
-      charge: 74,
-      faultCode: 34252,
-      userId: null,
-    },
-    {
-      id: '346467758',
-      latitude: 41.08534361207642,
-      longitude: 28.978598650157554,
-      charge: 24,
-      faultCode: null,
-      userId: '2376429743628',
-    },
-    {
-      id: '24635757',
-      latitude: 41.097024855859296,
-      longitude: 28.981529761373974,
-      charge: 100,
-      faultCode: null,
-      userId: null,
-    },
-  ];
 
   const [renderedBikes, setRenderedBikes] = useState(bikes);
 
@@ -138,13 +98,19 @@ const MaintenanceMan = () => {
   const selectedBikeIcon = new L.divIcon({
     className: 'flex justify-center items-center',
     iconSize: [36, 36],
-    html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#8ae2c8]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+    html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#60b299]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
   });
 
   const bikeIcon = new L.divIcon({
     className: 'flex justify-center items-center',
     iconSize: [36, 36],
-    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#8ae2c8]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#60b299]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+  });
+
+  const dockIcon = new L.divIcon({
+    className: 'flex justify-center items-center',
+    iconSize: [36, 36],
+    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#26bfe1]'><img class='overflow-hidden' src=${charge} /></div>`,
   });
 
   const markerIcon = new L.Icon({
@@ -169,14 +135,10 @@ const MaintenanceMan = () => {
     navigator.geolocation.watchPosition(success, error);
   }, []);
 
-  // setInterval(() => {
-  //   navigator.geolocation.watchPosition(success, error);
-  // }, 30 * 1000);
-
   return (
     <div className='flex flex-col lg:flex-row lg:h-screen'>
       <div className='w-full overflow-hidden'>
-        <div className='relative flex items-center bg-[#876ce9] h-20 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] md:h-0'>
+        <div className='relative flex items-center bg-[#00a19c] h-20 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] md:h-0'>
           <div className='flex m-4 md:m-8 md:relative items-center ml-auto space-x-1 sm:space-x-6'>
             <img
               className='inline-block h-10 p-2 cursor-pointer accent-white'
@@ -273,6 +235,13 @@ const MaintenanceMan = () => {
                 position={[bike.latitude, bike.longitude]}
               />
             ))}
+            {docks.map((dock, index) => (
+              <Marker
+                key={index}
+                icon={dockIcon}
+                position={[dock.latitude, dock.longitude]}
+              />
+            ))}
             <Events />
             <Marker zIndexOffset={1000} icon={markerIcon} position={center} />
           </MapContainer>
@@ -302,7 +271,7 @@ const MaintenanceMan = () => {
                 id={bike.id}
                 className={`${
                   selectedBike === bike.id
-                    ? 'border-[#49e8bb] border-4 h-52'
+                    ? 'border-[#38ab8a] border-4 h-52'
                     : 'border-gray-300 cursor-pointer'
                 } h-40 p-2 transition-all bg-white bg-[${bikeLogo}] flex-col flex justify-between duration-300 rounded-2xl shadow-[0_0_20px_0px_rgba(0,0,0,0.5)]`}
               >
@@ -341,8 +310,29 @@ const MaintenanceMan = () => {
         </div>
       </div>
 
-      <div className='lg:w-[24rem] w-full h-[100rem] lg:h-screen z-30 shadow-[0_40px_10px_0px_rgba(0,0,0,0.5)]'>
-        hello
+      <div className='lg:w-[24rem] flex flex-wrap lg:flex-col gap-4 p-4 w-full lg:h-screen z-30 shadow-[0_40px_10px_0px_rgba(0,0,0,0.5)]'>
+        {docks.map((dock, index) => {
+          return (
+            <div
+              key={index}
+              className='w-full flex flex-col justify-between cursor-pointer sm:w-[20rem] h-40 p-4 shadow-[0px_0px_16px_0px_rgba(0,0,0,0.2)] rounded-2xl'
+            >
+              <div className='flex justify-between'>
+                <h2 className='font-semibold text-xl'>{dock.name}</h2>
+                <h2 className='text-gray-400'>ID: {dock.id}</h2>
+              </div>
+              {dock.bikes.length === 0 ? (
+                <h2>No Bikes on this Dock</h2>
+              ) : (
+                <h2>{dock.bikes.length} Bike(s) Currently Charging</h2>
+              )}
+              <div className='flex justify-between items-center'>
+                <h2>Show Bikes</h2>
+                <img className='w-8' src={downArrow} alt="down" />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
