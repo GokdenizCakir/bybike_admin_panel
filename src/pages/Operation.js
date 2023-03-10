@@ -14,7 +14,7 @@ import downArrow from './../assets/downArrow.svg';
 import { bikes, docks } from '../utils/dummyData';
 import { useRecoilState } from 'recoil';
 
-const MaintenanceMan = () => {
+const Operation = () => {
   const [sideOpened, setSideOpened] = useRecoilState(sideState);
   const [center, setCenter] = useState([41.051789, 29.010509]);
   const [coordsFetched, setCoordsFetched] = useState(false);
@@ -338,4 +338,4 @@ const MaintenanceMan = () => {
   );
 };
 
-export default MaintenanceMan;
+export default Operation;

@@ -1,12 +1,12 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Login from './Auth/Login';
-import MaintenanceMan from './pages/MaintenanceMan';
 import Profile from './pages/Profile';
 import TeamMan from './pages/TeamMan';
 import UserInfo from './pages/UserInfo';
 import LoginPassword from './Auth/LoginPassword';
 import DefaultPassLogin from './Auth/DeafultPassLogin';
+import Operation from './pages/Operation';
 
 const App = () => {
   const { pathname } = useLocation();
@@ -14,7 +14,7 @@ const App = () => {
   const pathsWithNav = [
     '/profile',
     '/user_info',
-    '/maintenance_management',
+    '/operation_dashboard',
     '/employee_management',
   ];
   if (pathsWithNav.includes(pathname)) {
@@ -25,10 +25,7 @@ const App = () => {
           <Routes>
             <Route path='/profile' element={<Profile />} />
             <Route path='/user_info' element={<UserInfo />} />
-            <Route
-              path='/maintenance_management'
-              element={<MaintenanceMan />}
-            />
+            <Route path='/operation_dashboard' element={<Operation />} />
             <Route path='/employee_management' element={<TeamMan />} />
           </Routes>
         </div>
@@ -39,7 +36,10 @@ const App = () => {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/login/:phoneNumber' element={<LoginPassword />} />
-        <Route path='/login/set_new_password/:phoneNumber' element={<DefaultPassLogin />} />
+        <Route
+          path='/login/set_new_password/:phoneNumber'
+          element={<DefaultPassLogin />}
+        />
         <Route path='*' element={<div>Lost track ?</div>} />
       </Routes>
     );

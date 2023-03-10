@@ -58,7 +58,7 @@ const Sidebar = () => {
       </Link>
       <Link
         onClick={() => setSideOpened(false)}
-        to='/maintenance_management'
+        to='/operation_dashboard'
         className='flex items-center font-normal text-base md:text-sm w-full px-6 p-2 text-gray-600'
       >
         <div className='flex justify-center items-center mr-4 p-2 rounded-md shadow-[0_5px_10px_0px_rgba(0,0,0,0.12)]'>
@@ -80,7 +80,7 @@ const Sidebar = () => {
             <circle cx='17' cy='5' r='1'></circle>
           </svg>
         </div>
-        <h2>Maintenance Man.</h2>
+        <h2>Operation Dashboard</h2>
       </Link>
       <Link
         onClick={() => setSideOpened(false)}
