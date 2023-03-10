@@ -3,13 +3,20 @@ import settings from './../assets/settings.svg';
 import notification from './../assets/notification.svg';
 import { sideState } from '../globalStates/atom';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
+import {
+  markerIcon,
+  bikeIcon,
+  defectiveBikeIcon,
+  selectedBikeIcon,
+  selectedDefectiveBikeIcon,
+  dockIcon,
+  selectedDockIcon,
+} from '../utils/mapMarkerIcons';
 import 'leaflet/dist/leaflet.css';
 import target from './../assets/target.svg';
 import bikeLogo from './../assets/bikeWhite.svg';
 import blackBikeLogo from './../assets/bikeBlack.svg';
 import redirect from './../assets/redirect.svg';
-import charge from './../assets/charge.svg';
 import downArrow from './../assets/downArrow.svg';
 import { bikes, docks } from '../utils/dummyData';
 import { useRecoilState } from 'recoil';
@@ -18,7 +25,9 @@ const Operation = () => {
   const [sideOpened, setSideOpened] = useRecoilState(sideState);
   const [center, setCenter] = useState([41.051789, 29.010509]);
   const [coordsFetched, setCoordsFetched] = useState(false);
-  const [selectedBike, setSelectedBike] = useState('6');
+  const [selectedBike, setSelectedBike] = useState('');
+  const [selectedDock, setSelectedDock] = useState('');
+  const [showBikesInDock, setShowBikesInDock] = useState('');
   const centerRef = useRef();
   const parentBikesRef = useRef();
 
@@ -37,6 +46,7 @@ const Operation = () => {
 
   const handleBikeSelect = (id) => {
     const { children } = parentBikesRef.current;
+    setSelectedDock('');
 
     setSelectedBike(id);
     for (let child of children) {
@@ -82,43 +92,6 @@ const Operation = () => {
       map.flyTo(center);
     });
   };
-
-  const selectedDefectiveBikeIcon = new L.divIcon({
-    className: 'flex justify-center items-center',
-    iconSize: [36, 36],
-    html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#ff5353]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
-  });
-
-  const defectiveBikeIcon = new L.divIcon({
-    className: 'flex justify-center items-center',
-    iconSize: [36, 36],
-    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#ff5353]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
-  });
-
-  const selectedBikeIcon = new L.divIcon({
-    className: 'flex justify-center items-center',
-    iconSize: [36, 36],
-    html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#60b299]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
-  });
-
-  const bikeIcon = new L.divIcon({
-    className: 'flex justify-center items-center',
-    iconSize: [36, 36],
-    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#60b299]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
-  });
-
-  const dockIcon = new L.divIcon({
-    className: 'flex justify-center items-center',
-    iconSize: [36, 36],
-    html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#26bfe1]'><img class='overflow-hidden' src=${charge} /></div>`,
-  });
-
-  const markerIcon = new L.Icon({
-    className: 'pointer-events-none',
-    iconUrl: require('./../assets/location.png'),
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-  });
 
   const success = (position) => {
     const lat = position.coords.latitude;
@@ -192,6 +165,7 @@ const Operation = () => {
               </svg>
             </div>
           </div>
+          <div className='absolute left-4 -bottom-16'></div>
           <div
             ref={centerRef}
             className='absolute shadow-[0_0_20px_0px_rgba(0,0,0,0.5)] right-2 -bottom-16 flex justify-center items-center bg-white w-14 h-14 rounded-[50%] border-2 border-gray-600 cursor-pointer z-40'
@@ -237,8 +211,15 @@ const Operation = () => {
             ))}
             {docks.map((dock, index) => (
               <Marker
+                zIndexOffset={dock.id === selectedDock ? 100 : 0}
+                eventHandlers={{
+                  click: () => {
+                    setSelectedBike('');
+                    setSelectedDock(dock.id);
+                  },
+                }}
                 key={index}
-                icon={dockIcon}
+                icon={selectedDock === dock.id ? selectedDockIcon : dockIcon}
                 position={[dock.latitude, dock.longitude]}
               />
             ))}
@@ -261,6 +242,7 @@ const Operation = () => {
               <div
                 onClick={(e) => {
                   setSelectedBike(bike.id);
+                  setSelectedDock('');
                   e.target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'end',
@@ -271,9 +253,9 @@ const Operation = () => {
                 id={bike.id}
                 className={`${
                   selectedBike === bike.id
-                    ? 'border-[#38ab8a] border-4 h-52'
-                    : 'border-gray-300 cursor-pointer'
-                } h-40 p-2 transition-all bg-white bg-[${bikeLogo}] flex-col flex justify-between duration-300 rounded-2xl shadow-[0_0_20px_0px_rgba(0,0,0,0.5)]`}
+                    ? 'ring-[#38ab8a] ring-4 sm:h-52'
+                    : 'ring-gray-300 cursor-pointer'
+                } h-32 sm:h-40 p-2 transition-all bg-white bg-[${bikeLogo}] flex-col flex justify-between duration-300 rounded-2xl shadow-[0_0_20px_0px_rgba(0,0,0,0.5)]`}
               >
                 <div className='flex w-64 sm:w-80 px-1 sm:px-2 items-center pointer-events-none justify-between'>
                   <div className='flex items-center gap-1'>
@@ -284,7 +266,7 @@ const Operation = () => {
                 </div>
                 {bike.faultCode ? (
                   <div className='flex justify-center'>
-                    <h2 className='text-red-600 pointer-events-none'>
+                    <h2 className='text-red-600 text-sm sm:text-base pointer-events-none'>
                       Fault Code: {bike.faultCode}
                     </h2>
                   </div>
@@ -292,7 +274,7 @@ const Operation = () => {
                   <div></div>
                 )}
                 {bike.userId ? (
-                  <div className='flex text-sm sm:text-base justify-center gap-2 items-center'>
+                  <div className='flex h-8 text-sm sm:text-base justify-center gap-2 items-center'>
                     <h2>Current User:</h2>
                     <div>{bike.userId}</div>
                     <img
@@ -315,20 +297,69 @@ const Operation = () => {
           return (
             <div
               key={index}
-              className='w-full flex flex-col justify-between cursor-pointer sm:w-[20rem] h-40 p-4 shadow-[0px_0px_16px_0px_rgba(0,0,0,0.2)] rounded-2xl'
+              onClick={() => {
+                if (dock.id === selectedDock) {
+                  return;
+                } else {
+                  setSelectedDock(dock.id);
+                  setSelectedBike('');
+                  // setShowBikesInDock('');
+                }
+              }}
+              className={`${
+                selectedDock === dock.id
+                  ? 'ring-4 cursor-default ring-[#38ab8a]'
+                  : null
+              } ${
+                showBikesInDock === dock.id ? 'h-auto' : 'h-28'
+              } w-full flex flex-col justify-between cursor-pointer sm:w-[20rem] p-4 shadow-[0px_0px_16px_0px_rgba(0,0,0,0.2)] rounded-2xl`}
             >
               <div className='flex justify-between'>
                 <h2 className='font-semibold text-xl'>{dock.name}</h2>
                 <h2 className='text-gray-400'>ID: {dock.id}</h2>
               </div>
               {dock.bikes.length === 0 ? (
-                <h2>No Bikes on this Dock</h2>
+                <h2 className='text-gray-400'>No Bikes on this Dock</h2>
               ) : (
                 <h2>{dock.bikes.length} Bike(s) Currently Charging</h2>
               )}
-              <div className='flex justify-between items-center'>
-                <h2>Show Bikes</h2>
-                <img className='w-8' src={downArrow} alt="down" />
+              {dock.bikes.length === 0 ? null : (
+                <div
+                  onClick={() => {
+                    if (showBikesInDock === dock.id) {
+                      setShowBikesInDock('');
+                    } else {
+                      setShowBikesInDock(dock.id);
+                    }
+                  }}
+                  className='flex select-none cursor-pointer justify-between items-center'
+                >
+                  <h2>Bikes</h2>
+                  <img
+                    className={`${
+                      showBikesInDock === dock.id ? 'rotate-180' : null
+                    } w-8`}
+                    src={downArrow}
+                    alt='down'
+                  />
+                </div>
+              )}
+              <div className='flex flex-col gap-2 mt-4'>
+                {dock.bikes.map((bike, index) => {
+                  return (
+                    <div
+                      className={`${
+                        showBikesInDock === dock.id
+                          ? 'translate-y-0 opacity-100'
+                          : '-translate-y-4  opacity-0'
+                      } text-gray-500 flex justify-between pointer-events-none transition-transform`}
+                      key={index}
+                    >
+                      <div>ID: {bike.id}</div>
+                      <h2>{bike.charge}%</h2>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );

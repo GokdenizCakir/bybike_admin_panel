@@ -151,7 +151,7 @@ export const bikes = [
     latitude: 41.08534361207642,
     longitude: 28.978598650157554,
     charge: 24,
-    faultCode: null,
+    faultCode: 13245,
     userId: '2376429743628',
   },
   {
