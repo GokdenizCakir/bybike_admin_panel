@@ -39,6 +39,9 @@ const Operation = () => {
   const [selectedBike, setSelectedBike] = useState('');
   const [selectedDock, setSelectedDock] = useState('');
   const [showBikesInDock, setShowBikesInDock] = useState('');
+  const [bikeFilter, setBikeFilter] = useState(true);
+  const [dockFilter, setDockFilter] = useState(true);
+  const [employeeFilter, setEmployeeFilter] = useState(true);
   const centerRef = useRef();
   const parentBikesRef = useRef();
 
@@ -135,8 +138,8 @@ const Operation = () => {
   return (
     <div className='flex flex-col lg:flex-row lg:h-screen'>
       <div className='w-full overflow-hidden'>
-        <div className='relative flex items-center bg-[#00a19c] h-20 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] md:h-0'>
-          <div className='flex m-4 md:m-8 md:relative items-center ml-auto space-x-1 sm:space-x-6'>
+        <div className='relative flex items-center h-20 shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] md:h-0'>
+          <div className='flex justify-end pr-2 md:hidden fixed bg-[#00a19c] h-20 w-full z-50 md:relative items-center ml-auto space-x-1 sm:space-x-6'>
             <img
               className='inline-block h-10 p-2 cursor-pointer accent-white'
               src={settings}
@@ -155,7 +158,27 @@ const Operation = () => {
               alt='menu'
             />
           </div>
-          <div className='absolute left-4 -bottom-16'></div>
+
+          <div className='absolute flex left-14 gap-3 -bottom-14 h-12 z-40'>
+            <div
+              onClick={() => setBikeFilter(!bikeFilter)}
+              className={`${bikeFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'} shadow-[0_0_10px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
+            >
+              E-Bikes
+            </div>
+            <div
+              onClick={() => setDockFilter(!dockFilter)}
+              className={`${dockFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'} shadow-[0_0_20px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
+            >
+              E-Docks
+            </div>
+            <div
+              onClick={() => setEmployeeFilter(!employeeFilter)}
+              className={`${employeeFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'} shadow-[0_0_10px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
+            >
+              Employees
+            </div>
+          </div>
           <div
             ref={centerRef}
             className='absolute shadow-[0_0_20px_0px_rgba(0,0,0,0.5)] right-2 -bottom-16 flex justify-center items-center bg-white w-14 h-14 rounded-[50%] border-2 border-gray-600 cursor-pointer z-40'
@@ -175,6 +198,7 @@ const Operation = () => {
             zoomAnimation={true}
             zoom={14}
             minZoom={10}
+            scrollWheelZoom={window.innerWidth < 768 ? false : true}
             touchZoom={true}
           >
             <TileLayer
@@ -182,69 +206,77 @@ const Operation = () => {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               // attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
             />
-            {renderedBikes.map((bike, index) => (
-              <Marker
-                className='flex justify-center items-center'
-                key={index}
-                zIndexOffset={bike.id === selectedBike ? 100 : 0}
-                eventHandlers={{ click: () => handleBikeSelect(bike.id) }}
-                icon={
-                  bike.faultCode
-                    ? bike.id === selectedBike
-                      ? selectedDefectiveBikeIcon
-                      : defectiveBikeIcon
-                    : bike.id === selectedBike
-                    ? selectedBikeIcon
-                    : bikeIcon
-                }
-                position={[bike.latitude, bike.longitude]}
-              />
-            ))}
-            {docks.map((dock, index) => (
-              <Marker
-                zIndexOffset={dock.id === selectedDock ? 100 : 0}
-                eventHandlers={{
-                  click: () => {
-                    setSelectedBike('');
-                    setSelectedDock(dock.id);
-                  },
-                }}
-                key={index}
-                icon={selectedDock === dock.id ? selectedDockIcon : dockIcon}
-                position={[dock.latitude, dock.longitude]}
-              />
-            ))}
-            {employees.map((employee, index) => (
-              <Marker
-                className='flex justify-center items-center'
-                zIndexOffset={100}
-                key={index}
-                icon={employeeColor(employee.status, 'text')}
-                position={[employee.latitude, employee.longitude]}
-              >
-                <Popup closeOnClick={true}>
-                  <div className='flex flex-col items-center'>
-                    <h2>{employee.fullName}</h2>
-                    <h2
-                      className={`${employeeColor(
-                        employee.status,
-                        'color'
-                      )} text-semibold text-lg`}
-                    >
-                      {employee.status}
-                    </h2>
-                    <button className='bg-[#00a19c] select-none text-white p-2 rounded-md md:hover:bg-[#5bccc8]'>
-                      Go to Profile
-                    </button>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+            {bikeFilter
+              ? renderedBikes.map((bike, index) => (
+                  <Marker
+                    className='flex justify-center items-center'
+                    key={index}
+                    zIndexOffset={bike.id === selectedBike ? 100 : 0}
+                    eventHandlers={{ click: () => handleBikeSelect(bike.id) }}
+                    icon={
+                      bike.faultCode
+                        ? bike.id === selectedBike
+                          ? selectedDefectiveBikeIcon
+                          : defectiveBikeIcon
+                        : bike.id === selectedBike
+                        ? selectedBikeIcon
+                        : bikeIcon
+                    }
+                    position={[bike.latitude, bike.longitude]}
+                  />
+                ))
+              : null}
+            {dockFilter
+              ? docks.map((dock, index) => (
+                  <Marker
+                    zIndexOffset={dock.id === selectedDock ? 100 : 0}
+                    eventHandlers={{
+                      click: () => {
+                        setSelectedBike('');
+                        setSelectedDock(dock.id);
+                      },
+                    }}
+                    key={index}
+                    icon={
+                      selectedDock === dock.id ? selectedDockIcon : dockIcon
+                    }
+                    position={[dock.latitude, dock.longitude]}
+                  />
+                ))
+              : null}
+            {employeeFilter
+              ? employees.map((employee, index) => (
+                  <Marker
+                    className='flex justify-center items-center'
+                    zIndexOffset={100}
+                    key={index}
+                    icon={employeeColor(employee.status, 'text')}
+                    position={[employee.latitude, employee.longitude]}
+                  >
+                    <Popup closeOnClick={true}>
+                      <div className='flex flex-col items-center'>
+                        <h2>{employee.fullName}</h2>
+                        <h2
+                          className={`${employeeColor(
+                            employee.status,
+                            'color'
+                          )} text-semibold text-lg`}
+                        >
+                          {employee.status}
+                        </h2>
+                        <button className='bg-[#00a19c] select-none text-white p-2 rounded-md md:hover:bg-[#5bccc8]'>
+                          Go to Profile
+                        </button>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))
+              : null}
             <Events />
             <Marker zIndexOffset={1000} icon={markerIcon} position={center} />
           </MapContainer>
         ) : (
-          <div className='w-full h-[60vh] lg:h-screen flex justify-center items-center '>
+          <div className='w-full h-[80vh] lg:h-screen flex justify-center items-center '>
             <div className='animate-load aspect-square rounded-[50%] p-10 overflow-hidden shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)]'>
               <img src={require('./../assets/favicon.png')} alt='ByBike' />
             </div>
@@ -255,7 +287,7 @@ const Operation = () => {
             ref={parentBikesRef}
             className='absolute flex items-end overflow-x-scroll overflow-visible px-4 gap-4 z-30 h-[10rem] md:h-[15rem] pb-3 w-[100%] -top-[10rem] md:-top-[15rem]'
           >
-            {renderedBikes.map((bike, index) => (
+            {bikeFilter ? renderedBikes.map((bike, index) => (
               <div
                 onClick={(e) => {
                   setSelectedBike(bike.id);
@@ -304,12 +336,12 @@ const Operation = () => {
                   <div className='h-5'></div>
                 )}
               </div>
-            ))}
+            )): null}
           </div>
         </div>
       </div>
 
-      <div className='lg:w-[20rem] flex flex-wrap lg:flex-col gap-4 p-4 w-full lg:h-screen z-30 lg:shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)]'>
+      <div className={`${dockFilter ? null : 'hidden' } lg:w-[20rem] flex flex-wrap lg:flex-col gap-4 p-4 w-full lg:h-screen z-30 lg:shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)]`}>
         {docks.map((dock, index) => {
           return (
             <div
