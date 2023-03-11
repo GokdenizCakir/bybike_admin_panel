@@ -17,7 +17,7 @@ const Sidebar = () => {
     <div
       className={`${
         sideOpened ? 'translate-x-0 w-screen' : '-translate-x-80 w-0'
-      } z-50 absolute shadow-[0_40px_10px_0px_rgba(0,0,0,0.5)] md:sticky bg-white md:translate-x-0 md:w-80 flex flex-col items-center h-screen transition-all min-w-80 p-4`}
+      } z-50 absolute shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)] md:sticky bg-white md:translate-x-0 md:w-80 flex flex-col items-center h-screen transition-all min-w-80 p-4`}
     >
       <div
         onClick={() => setSideOpened(false)}

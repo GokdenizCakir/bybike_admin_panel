@@ -2,7 +2,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import settings from './../assets/settings.svg';
 import notification from './../assets/notification.svg';
 import { sideState } from '../globalStates/atom';
-import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMapEvents,
+} from 'react-leaflet';
 import {
   markerIcon,
   bikeIcon,
@@ -11,6 +17,10 @@ import {
   selectedDefectiveBikeIcon,
   dockIcon,
   selectedDockIcon,
+  employeeWorkIcon,
+  employeeFieldIcon,
+  employeeFreeIcon,
+  employeeBreakIcon,
 } from '../utils/mapMarkerIcons';
 import 'leaflet/dist/leaflet.css';
 import target from './../assets/target.svg';
@@ -18,7 +28,8 @@ import bikeLogo from './../assets/bikeWhite.svg';
 import blackBikeLogo from './../assets/bikeBlack.svg';
 import redirect from './../assets/redirect.svg';
 import downArrow from './../assets/downArrow.svg';
-import { bikes, docks } from '../utils/dummyData';
+import menu from './../assets/menu.svg';
+import { bikes, docks, employees } from '../utils/dummyData';
 import { useRecoilState } from 'recoil';
 
 const Operation = () => {
@@ -93,6 +104,19 @@ const Operation = () => {
     });
   };
 
+  const employeeColor = (status, response) => {
+    switch (status) {
+      case 'ON WORK':
+        return response === 'color' ? 'text-gray-400' : employeeWorkIcon;
+      case 'ON FIELD':
+        return response === 'color' ? 'text-red-600' : employeeFieldIcon;
+      case 'FREE':
+        return response === 'color' ? 'text-green-500' : employeeFreeIcon;
+      case 'ON BREAK':
+        return response === 'color' ? 'text-orange-400' : employeeBreakIcon;
+    }
+  };
+
   const success = (position) => {
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
@@ -123,47 +147,13 @@ const Operation = () => {
               src={notification}
               alt='notification'
             />
-            <div
+
+            <img
+              className='h-12 p-2'
               onClick={() => setSideOpened(!sideOpened)}
-              className='p-2 cursor-pointer block md:hidden'
-            >
-              <svg
-                className='overflow-visible'
-                width='28'
-                height='16'
-                viewBox='0 0 28 16'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <line
-                  className={` origin-left duration-500 transition-all`}
-                  y1='1'
-                  x2='28'
-                  y2='1'
-                  strokeLinecap='round'
-                  stroke='white'
-                  strokeWidth='2.4'
-                />
-                <line
-                  className={`duration-300 transition-all`}
-                  y1='8'
-                  x2='28'
-                  y2='8'
-                  strokeLinecap='round'
-                  stroke='white'
-                  strokeWidth='2.4'
-                />
-                <line
-                  className={`origin-left duration-500 transition-all`}
-                  y1='15'
-                  x2='28'
-                  y2='15'
-                  strokeLinecap='round'
-                  stroke='white'
-                  strokeWidth='2.4'
-                />
-              </svg>
-            </div>
+              src={menu}
+              alt='menu'
+            />
           </div>
           <div className='absolute left-4 -bottom-16'></div>
           <div
@@ -179,11 +169,11 @@ const Operation = () => {
             whenReady={() => {
               setCoordsFetched(true);
             }}
-            className='w-full z-30 h-[66vh] lg:h-screen'
+            className='w-full z-30 h-[80vh] lg:h-screen'
             center={center}
             zoomControl={true}
             zoomAnimation={true}
-            zoom={16}
+            zoom={14}
             minZoom={10}
             touchZoom={true}
           >
@@ -194,6 +184,7 @@ const Operation = () => {
             />
             {renderedBikes.map((bike, index) => (
               <Marker
+                className='flex justify-center items-center'
                 key={index}
                 zIndexOffset={bike.id === selectedBike ? 100 : 0}
                 eventHandlers={{ click: () => handleBikeSelect(bike.id) }}
@@ -223,6 +214,32 @@ const Operation = () => {
                 position={[dock.latitude, dock.longitude]}
               />
             ))}
+            {employees.map((employee, index) => (
+              <Marker
+                className='flex justify-center items-center'
+                zIndexOffset={100}
+                key={index}
+                icon={employeeColor(employee.status, 'text')}
+                position={[employee.latitude, employee.longitude]}
+              >
+                <Popup closeOnClick={true}>
+                  <div className='flex flex-col items-center'>
+                    <h2>{employee.fullName}</h2>
+                    <h2
+                      className={`${employeeColor(
+                        employee.status,
+                        'color'
+                      )} text-semibold text-lg`}
+                    >
+                      {employee.status}
+                    </h2>
+                    <button className='bg-[#00a19c] select-none text-white p-2 rounded-md md:hover:bg-[#5bccc8]'>
+                      Go to Profile
+                    </button>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
             <Events />
             <Marker zIndexOffset={1000} icon={markerIcon} position={center} />
           </MapContainer>
@@ -236,7 +253,7 @@ const Operation = () => {
         <div className='relative h-0'>
           <div
             ref={parentBikesRef}
-            className='absolute flex items-end overflow-x-scroll overflow-visible px-4 gap-4 z-30 h-[15rem] pb-3 w-[100%] -top-[15rem]'
+            className='absolute flex items-end overflow-x-scroll overflow-visible px-4 gap-4 z-30 h-[10rem] md:h-[15rem] pb-3 w-[100%] -top-[10rem] md:-top-[15rem]'
           >
             {renderedBikes.map((bike, index) => (
               <div
@@ -253,9 +270,9 @@ const Operation = () => {
                 id={bike.id}
                 className={`${
                   selectedBike === bike.id
-                    ? 'ring-[#38ab8a] ring-4 sm:h-52'
+                    ? 'ring-[#38ab8a] ring-4 lg:h-52'
                     : 'ring-gray-300 cursor-pointer'
-                } h-32 sm:h-40 p-2 transition-all bg-white bg-[${bikeLogo}] flex-col flex justify-between duration-300 rounded-2xl shadow-[0_0_20px_0px_rgba(0,0,0,0.5)]`}
+                } h-32 lg:h-40 p-2 transition-all bg-white bg-[${bikeLogo}] flex-col flex justify-between duration-300 rounded-2xl shadow-[0_0_20px_0px_rgba(0,0,0,0.5)]`}
               >
                 <div className='flex w-64 sm:w-80 px-1 sm:px-2 items-center pointer-events-none justify-between'>
                   <div className='flex items-center gap-1'>
@@ -292,7 +309,7 @@ const Operation = () => {
         </div>
       </div>
 
-      <div className='lg:w-[24rem] flex flex-wrap lg:flex-col gap-4 p-4 w-full lg:h-screen z-30 shadow-[0_40px_10px_0px_rgba(0,0,0,0.5)]'>
+      <div className='lg:w-[20rem] flex flex-wrap lg:flex-col gap-4 p-4 w-full lg:h-screen z-30 lg:shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)]'>
         {docks.map((dock, index) => {
           return (
             <div
@@ -312,7 +329,7 @@ const Operation = () => {
                   : null
               } ${
                 showBikesInDock === dock.id ? 'h-auto' : 'h-28'
-              } w-full flex flex-col justify-between cursor-pointer sm:w-[20rem] p-4 shadow-[0px_0px_16px_0px_rgba(0,0,0,0.2)] rounded-2xl`}
+              } w-full flex flex-col justify-between cursor-pointer sm:w-[18rem] p-4 shadow-[0px_0px_16px_0px_rgba(0,0,0,0.2)] rounded-2xl`}
             >
               <div className='flex justify-between'>
                 <h2 className='font-semibold text-xl'>{dock.name}</h2>
@@ -332,7 +349,7 @@ const Operation = () => {
                       setShowBikesInDock(dock.id);
                     }
                   }}
-                  className='flex select-none cursor-pointer justify-between items-center'
+                  className='flex py-2 select-none cursor-pointer justify-between items-center'
                 >
                   <h2>Bikes</h2>
                   <img

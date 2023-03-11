@@ -132,16 +132,16 @@ export const invoiceData = [
 export const bikes = [
   {
     id: '3256246465',
-    latitude: 41.088686794249774,
-    longitude: 28.979958520573042,
+    latitude: 41.087619093686534, 
+    longitude: 28.986609655148715,
     charge: 20,
     faultCode: 23442,
     userId: null,
   },
   {
     id: '193808707',
-    latitude: 41.09079424550636,
-    longitude: 28.982201439619224,
+    latitude: 41.095043432329874, 
+    longitude: 28.985864214678042,
     charge: 74,
     faultCode: 34252,
     userId: null,
@@ -207,5 +207,38 @@ export const docks = [
     latitude: 41.09063683589029, 
     longitude: 29.00601287031649,
     bikes: [],
+  },
+];
+
+
+export const employees = [
+  // 41.09680953964715, 28.960178785976666
+  {
+    fullName: 'Gökdeniz Çakır',
+    userID: '#472135',
+    latitude: 41.08577699203366, 
+    longitude: 28.99328955603603,
+    status: 'ON BREAK',
+  },
+  {
+    fullName: 'Burak Karataş',
+    userID: '#237482',
+    latitude: 41.10208609446402, 
+    longitude: 28.97557409346045, 
+    status: 'FREE',
+  },
+  {
+    fullName: 'Emre Harbutoğlu',
+    userID: '#164037',
+    latitude: 41.0761080370059, 
+    longitude: 28.96962016095119,
+    status: 'ON WORK',
+  },
+  {
+    fullName: 'Gökdeniz Çakır',
+    userID: '#038620',
+    latitude: 41.09680953964715, 
+    longitude: 28.960178785976666,
+    status: 'ON FIELD',
   },
 ];

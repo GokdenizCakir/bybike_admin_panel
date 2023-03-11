@@ -1,42 +1,52 @@
 import L from 'leaflet';
 import bikeLogo from './../assets/bikeWhite.svg';
 import charge from './../assets/charge.svg';
+import employee from './../assets/employee.svg';
 
+const html = (logo, color, selected) => {
+  return `<div class='w-14 ${
+    selected ? 'scale-125' : null
+  } h-14 -translate-x-[40%] -translate-y-1/2 p-2 transition-all rounded-[50%] overflow-hidden shadow-[0_0px_10px_0px_rgba(0,0,0,0.7)] flex justify-center items-center ${color}'><img class='overflow-hidden' src=${logo} /></div>`;
+};
 
 export const selectedDefectiveBikeIcon = new L.divIcon({
-  className: 'flex justify-center items-center',
-  iconSize: [36, 36],
-  html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#ff5353]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+  html: html(bikeLogo, 'bg-[#ff5353]', true),
 });
 
 export const defectiveBikeIcon = new L.divIcon({
-  className: 'flex justify-center items-center',
-  iconSize: [36, 36],
-  html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#ff5353]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+  html: html(bikeLogo, 'bg-[#ff5353]', false),
 });
 
 export const selectedBikeIcon = new L.divIcon({
-  className: 'flex justify-center items-center',
-  iconSize: [36, 36],
-  html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#60b299]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
+  html: html(bikeLogo, 'bg-[#60b299]', true),
 });
 
 export const bikeIcon = new L.divIcon({
-  className: 'flex justify-center items-center',
-  iconSize: [36, 36],
-  html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#60b299]'><img class='overflow-hidden' src=${bikeLogo} /></div>`,
-});
-
-export const dockIcon = new L.divIcon({
-  className: 'flex justify-center items-center',
-  iconSize: [36, 36],
-  html: `<div class='w-14 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#26bfe1]'><img class='overflow-hidden' src=${charge} /></div>`,
+  html: html(bikeLogo, 'bg-[#60b299]', false),
 });
 
 export const selectedDockIcon = new L.divIcon({
-  className: 'flex justify-center items-center',
-  iconSize: [36, 36],
-  html: `<div class='w-14 scale-125 h-14 p-2 transition-all rounded-[50%] overflow-hidden border-gray-400 border shadow-[0_5px_50px_0px_rgba(0,0,0,0.12)] flex justify-center items-center bg-[#26bfe1]'><img class='overflow-hidden' src=${charge} /></div>`,
+  html: html(charge, 'bg-[#26bfe1]', true),
+});
+
+export const dockIcon = new L.divIcon({
+  html: html(charge, 'bg-[#26bfe1]', false),
+});
+
+export const employeeWorkIcon = new L.divIcon({
+  html: html(employee, 'bg-gray-400', false),
+});
+
+export const employeeFieldIcon = new L.divIcon({
+  html: html(employee, 'bg-red-600', false),
+});
+
+export const employeeFreeIcon = new L.divIcon({
+  html: html(employee, 'bg-green-500', false),
+});
+
+export const employeeBreakIcon = new L.divIcon({
+  html: html(employee, 'bg-orange-400', false),
 });
 
 export const markerIcon = new L.Icon({
