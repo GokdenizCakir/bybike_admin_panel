@@ -31,10 +31,17 @@ import downArrow from './../assets/downArrow.svg';
 import menu from './../assets/menu.svg';
 import { bikes, docks, employees } from '../utils/dummyData';
 import { useRecoilState } from 'recoil';
+import axios from 'axios';
 
 const Operation = () => {
   const [sideOpened, setSideOpened] = useRecoilState(sideState);
   const [center, setCenter] = useState([41.051789, 29.010509]);
+  const [bounds, setBounds] = useState({
+    lat1: '',
+    lon1: '',
+    lat2: '',
+    lon2: '',
+  });
   const [coordsFetched, setCoordsFetched] = useState(false);
   const [selectedBike, setSelectedBike] = useState('');
   const [selectedDock, setSelectedDock] = useState('');
@@ -46,6 +53,26 @@ const Operation = () => {
   const parentBikesRef = useRef();
 
   const [renderedBikes, setRenderedBikes] = useState(bikes);
+
+  const fetchData = async () => {
+    const res = await axios.post(
+      'http://192.168.14.57:3500/station/get-stations-area',
+      bounds,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          clientId: '5c6a08bf-7b2c-403e-b54b-c588dfc248c6',
+          Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+        withCredentials: false,
+      }
+    );
+    console.log(res);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [bounds]);
 
   const renderBikes = (latitude1, longitude1, latitude2, longitude2) => {
     const newList = bikes.filter(
@@ -76,26 +103,40 @@ const Operation = () => {
 
   const Events = () => {
     const map = useMapEvents({
+      load() {
+        const { _southWest, _northEast } = map.getBounds();
+        setBounds({
+          lat1: parseFloat(_southWest.lat.toFixed(6)),
+          lon1: parseFloat(_southWest.lng.toFixed(6)),
+          lat2: parseFloat(_northEast.lat.toFixed(6)),
+          lon2: parseFloat(_northEast.lng.toFixed(6)),
+        });
+        console.log(bounds);
+      },
       dragend() {
         const { _southWest, _northEast } = map.getBounds();
-        renderBikes(
-          _southWest.lat,
-          _southWest.lng,
-          _northEast.lat,
-          _northEast.lng
-        );
+        setBounds({
+          lat1: parseFloat(_southWest.lat.toFixed(6)),
+          lon1: parseFloat(_southWest.lng.toFixed(6)),
+          lat2: parseFloat(_northEast.lat.toFixed(6)),
+          lon2: parseFloat(_northEast.lng.toFixed(6)),
+        });
+        console.log(bounds);
+
         if (!renderedBikes.find((bike) => bike.id === selectedBike)) {
           setSelectedBike('');
         }
       },
       zoomend() {
         const { _southWest, _northEast } = map.getBounds();
-        renderBikes(
-          _southWest.lat,
-          _southWest.lng,
-          _northEast.lat,
-          _northEast.lng
-        );
+        setBounds({
+          lat1: parseFloat(_southWest.lat.toFixed(6)),
+          lon1: parseFloat(_southWest.lng.toFixed(6)),
+          lat2: parseFloat(_northEast.lat.toFixed(6)),
+          lon2: parseFloat(_northEast.lng.toFixed(6)),
+        });
+        console.log(bounds);
+
         if (!renderedBikes.find((bike) => bike.id === selectedBike)) {
           setSelectedBike('');
         }
@@ -120,10 +161,11 @@ const Operation = () => {
     }
   };
 
-  const success = (position) => {
+  const success = async (position) => {
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
     setCenter([lat, lng]);
+
     setCoordsFetched(true);
   };
 
@@ -162,19 +204,25 @@ const Operation = () => {
           <div className='absolute flex left-14 gap-3 -bottom-14 h-12 z-40'>
             <div
               onClick={() => setBikeFilter(!bikeFilter)}
-              className={`${bikeFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'} shadow-[0_0_10px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
+              className={`${
+                bikeFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'
+              } shadow-[0_0_10px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
             >
               E-Bikes
             </div>
             <div
               onClick={() => setDockFilter(!dockFilter)}
-              className={`${dockFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'} shadow-[0_0_20px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
+              className={`${
+                dockFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'
+              } shadow-[0_0_20px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
             >
               E-Docks
             </div>
             <div
               onClick={() => setEmployeeFilter(!employeeFilter)}
-              className={`${employeeFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'} shadow-[0_0_10px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
+              className={`${
+                employeeFilter ? 'bg-[#34ada9] ' : 'bg-[#4bc2be]/60'
+              } shadow-[0_0_10px_0px_rgba(0,0,0,0.5)] text-white transition-all cursor-pointer rounded-xl flex items-center px-2`}
             >
               Employees
             </div>
@@ -192,7 +240,7 @@ const Operation = () => {
             whenReady={() => {
               setCoordsFetched(true);
             }}
-            className='w-full z-30 h-[80vh] lg:h-screen'
+            className='w-full z-30 h-[80vh] lg:h-screen' // w-screen olacak
             center={center}
             zoomControl={true}
             zoomAnimation={true}
@@ -287,61 +335,67 @@ const Operation = () => {
             ref={parentBikesRef}
             className='absolute flex items-end overflow-x-scroll overflow-visible px-4 gap-4 z-30 h-[10rem] md:h-[15rem] pb-3 w-[100%] -top-[10rem] md:-top-[15rem]'
           >
-            {bikeFilter ? renderedBikes.map((bike, index) => (
-              <div
-                onClick={(e) => {
-                  setSelectedBike(bike.id);
-                  setSelectedDock('');
-                  e.target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'end',
-                    inline: 'center',
-                  });
-                }}
-                key={index}
-                id={bike.id}
-                className={`${
-                  selectedBike === bike.id
-                    ? 'ring-[#38ab8a] ring-4 lg:h-52'
-                    : 'ring-gray-300 cursor-pointer'
-                } h-32 lg:h-40 p-2 transition-all bg-white bg-[${bikeLogo}] flex-col flex justify-between duration-300 rounded-2xl shadow-[0_0_20px_0px_rgba(0,0,0,0.5)]`}
-              >
-                <div className='flex w-64 sm:w-80 px-1 sm:px-2 items-center pointer-events-none justify-between'>
-                  <div className='flex items-center gap-1'>
-                    <img className='w-10' src={blackBikeLogo} alt='bike' />
-                    {bike.charge}%
+            {bikeFilter
+              ? renderedBikes.map((bike, index) => (
+                  <div
+                    onClick={(e) => {
+                      setSelectedBike(bike.id);
+                      setSelectedDock('');
+                      e.target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'end',
+                        inline: 'center',
+                      });
+                    }}
+                    key={index}
+                    id={bike.id}
+                    className={`${
+                      selectedBike === bike.id
+                        ? 'ring-[#38ab8a] ring-4 lg:h-52'
+                        : 'ring-gray-300 cursor-pointer'
+                    } h-32 lg:h-40 p-2 transition-all bg-white bg-[${bikeLogo}] flex-col flex justify-between duration-300 rounded-2xl shadow-[0_0_20px_0px_rgba(0,0,0,0.5)]`}
+                  >
+                    <div className='flex w-64 sm:w-80 px-1 sm:px-2 items-center pointer-events-none justify-between'>
+                      <div className='flex items-center gap-1'>
+                        <img className='w-10' src={blackBikeLogo} alt='bike' />
+                        {bike.charge}%
+                      </div>
+                      <h2>Bike ID: {bike.id}</h2>
+                    </div>
+                    {bike.faultCode ? (
+                      <div className='flex justify-center'>
+                        <h2 className='text-red-600 text-sm sm:text-base pointer-events-none'>
+                          Fault Code: {bike.faultCode}
+                        </h2>
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
+                    {bike.userId ? (
+                      <div className='flex h-8 text-sm sm:text-base justify-center gap-2 items-center'>
+                        <h2>Current User:</h2>
+                        <div>{bike.userId}</div>
+                        <img
+                          className='w-8 cursor-pointer p-1'
+                          src={redirect}
+                          alt='redirect'
+                        />
+                      </div>
+                    ) : (
+                      <div className='h-5'></div>
+                    )}
                   </div>
-                  <h2>Bike ID: {bike.id}</h2>
-                </div>
-                {bike.faultCode ? (
-                  <div className='flex justify-center'>
-                    <h2 className='text-red-600 text-sm sm:text-base pointer-events-none'>
-                      Fault Code: {bike.faultCode}
-                    </h2>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-                {bike.userId ? (
-                  <div className='flex h-8 text-sm sm:text-base justify-center gap-2 items-center'>
-                    <h2>Current User:</h2>
-                    <div>{bike.userId}</div>
-                    <img
-                      className='w-8 cursor-pointer p-1'
-                      src={redirect}
-                      alt='redirect'
-                    />
-                  </div>
-                ) : (
-                  <div className='h-5'></div>
-                )}
-              </div>
-            )): null}
+                ))
+              : null}
           </div>
         </div>
       </div>
 
-      <div className={`${dockFilter ? null : 'hidden' } lg:w-[20rem] flex flex-wrap lg:flex-col gap-4 p-4 w-full lg:h-screen z-30 lg:shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)]`}>
+      <div
+        className={`${
+          dockFilter ? null : 'hidden'
+        } lg:w-[20rem] flex flex-wrap lg:flex-col gap-4 p-4 w-full lg:h-screen z-30 lg:shadow-[0_0px_10px_0px_rgba(0,0,0,0.5)]`}
+      >
         {docks.map((dock, index) => {
           return (
             <div

@@ -3,20 +3,26 @@ import { useFormik } from 'formik';
 import { passwordValSchema } from '../utils/validations';
 import { Link, useParams } from 'react-router-dom';
 import logo from './../assets/favicon.png';
+import axios from 'axios';
 
 const LoginPassword = () => {
   const phoneNumber = useParams().phoneNumber;
   const onSubmit = async (values) => {
-    console.log(values);
-    console.log(phoneNumber);
-    window.location.pathname = '/profile';
-    // const res = await axios.post('', JSON.stringify({
-    //   phoneNumber,
-    //   password: values.password
-    // }), {
-    //   headers: { 'Content-Type': 'application/json' },
-    //   withCredentials: true,
-    // });
+    // window.location.pathname = '/profile';
+    const res = await axios.post(
+      'http://192.168.14.57:3500/login',
+      { phone: '+' + phoneNumber, password: values.password },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          clientId: '5c6a08bf-7b2c-403e-b54b-c588dfc248c6',
+        },
+        withCredentials: false,
+      }
+    );
+    localStorage.setItem('accessToken', res.data.accessToken);
+    
+    console.log(res);
   };
 
   const formik = useFormik({

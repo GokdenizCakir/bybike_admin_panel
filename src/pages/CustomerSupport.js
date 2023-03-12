@@ -5,11 +5,11 @@ import calendar from './../assets/calendar.svg';
 import pdf from './../assets/pdf.svg';
 import wallet from './../assets/wallet.svg';
 
-const UserInfo = () => {
+const CustomerSupport = () => {
   const user = employeeData[0];
   return (
     <div className='p-6'>
-      <Nav page='User Information' />
+      <Nav page='Customer Support' />
       <div className='grid grid-cols-1 sm:grid-cols-2 gap-6 my-5'>
         <div className='text-gray-600 whitespace-nowrap font-semibold'>
           <h2 className='text-2xl'>User Information</h2>
@@ -158,4 +158,4 @@ const UserInfo = () => {
   );
 };
 
-export default UserInfo;
+export default CustomerSupport;

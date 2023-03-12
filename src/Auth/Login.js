@@ -11,17 +11,18 @@ const Login = () => {
     window.location.pathname = '/login/set_new_password/' + formik.values.phone;
   };
   const onSubmit = async (values) => {
-    const isPasswordDefault = false;
-    console.log(values);
-    // const res = await axios.post('', JSON.stringify(formik.values), {
-    //   headers: { 'Content-Type': 'application/json' },
-    //   withCredentials: true,
-    // });
+    const res = await axios.get(
+      'http://192.168.14.57:3500/user/dashboard-check/90' + values.phone,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: false,
+      }
+    );
 
-    if (isPasswordDefault) {
+    if (res.data.changePassword) {
       setIsVerifyShown(true);
     } else {
-      window.location.pathname = '/login/' + formik.values.phone;
+      window.location.pathname = '/login/90' + formik.values.phone;
     }
   };
 
@@ -90,7 +91,6 @@ const Login = () => {
                 />
               </div>
             )}
-            
 
             {formik.errors.error && (
               <div className='text-red-500 text-sm text-center border-b border-red-500 py-2'>
@@ -101,7 +101,11 @@ const Login = () => {
             <button
               type='submit'
               id='submit-text'
-              disabled={isVerifyShown ? (formikVerify.isSubmitting || !formikVerify.isValid) : (formik.isSubmitting || !formik.isValid)}
+              disabled={
+                isVerifyShown
+                  ? formikVerify.isSubmitting || !formikVerify.isValid
+                  : formik.isSubmitting || !formik.isValid
+              }
               className='w-full mb-1 text-white bg-[#00a19c] focus:ring-4 focus:outline-none focus:ring-primary-300 px-5 py-2 sm:py-3 text-center transition-all duration-150 ease-in-out hover:scale-105 hover:bg-[#7fd8d5] disabled:bg-[#98b3b2]'
             >
               {isVerifyShown ? 'Verify Code' : 'Login'}

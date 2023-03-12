@@ -108,7 +108,7 @@ const Sidebar = () => {
       </Link>
       <Link
         onClick={() => setSideOpened(false)}
-        to='/user_info'
+        to='/customer_support'
         className='flex items-center font-normal text-base md:text-sm w-full px-6 p-2 text-gray-600'
       >
         <div className='flex justify-center items-center mr-4 p-2 rounded-md shadow-[0_5px_10px_0px_rgba(0,0,0,0.12)]'>
@@ -128,7 +128,7 @@ const Sidebar = () => {
             <path d='M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2'></path>
           </svg>
         </div>
-        <h2>User Information</h2>
+        <h2>Customer Support</h2>
       </Link>
     </div>
   );

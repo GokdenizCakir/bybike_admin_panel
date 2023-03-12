@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar';
 import Login from './Auth/Login';
 import Profile from './pages/Profile';
 import TeamMan from './pages/TeamMan';
-import UserInfo from './pages/UserInfo';
+import CustomerSupport from './pages/CustomerSupport';
 import LoginPassword from './Auth/LoginPassword';
 import DefaultPassLogin from './Auth/DeafultPassLogin';
 import Operation from './pages/Operation';
@@ -13,7 +13,7 @@ const App = () => {
 
   const pathsWithNav = [
     '/profile',
-    '/user_info',
+    '/customer_support',
     '/operation_dashboard',
     '/employee_management',
   ];
@@ -24,7 +24,7 @@ const App = () => {
         <div className=' w-full overflow-x-hidden'>
           <Routes>
             <Route path='/profile' element={<Profile />} />
-            <Route path='/user_info' element={<UserInfo />} />
+            <Route path='/customer_support' element={<CustomerSupport />} />
             <Route path='/operation_dashboard' element={<Operation />} />
             <Route path='/employee_management' element={<TeamMan />} />
           </Routes>
